@@ -1,2 +1,3 @@
+# Allow all - security through obscurity (URL is not indexed/discoverable)
 User-agent: *
-Disallow: /
+Allow: /
