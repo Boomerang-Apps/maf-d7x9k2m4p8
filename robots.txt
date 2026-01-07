@@ -1,2 +1,13 @@
+# Block search engine indexing but allow Claude
 User-agent: *
 Disallow: /
+
+# Allow Claude/Anthropic bots
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
