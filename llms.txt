@@ -1,0 +1,37 @@
+# Multi-Agent Framework (MAF)
+
+> Production-ready framework for autonomous multi-agent software development
+> Version 1.0.0 | Boomerang Apps
+
+## Quick Context
+
+- 29 agents (CTO, PM, 10 FE Dev, 10 BE Dev, 5 QA, DevOps, Security)
+- 12 domains (auth, client, pilot, project, proposal, payment, deliverables, messaging, admin, core, layout, notifications)
+- 8 gates (0-7)
+- 108 forbidden operations
+
+## Core Documents (Start Here)
+
+- [core/SAFETY-PROTOCOL.md](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/core/SAFETY-PROTOCOL.md): 108 forbidden operations, emergency levels
+- [core/DOMAINS.md](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/core/DOMAINS.md): Domain boundaries and file ownership
+- [core/AGENTS.md](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/core/AGENTS.md): 29 agent definitions with roles and models
+- [core/PM-VALIDATOR-SECTIONS.md](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/core/PM-VALIDATOR-SECTIONS.md): 30 validation checks
+
+## Architecture
+
+- [reference/architecture/migrations/maf-complete-migration.sql](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/reference/architecture/migrations/maf-complete-migration.sql): Database schema (9 tables)
+- [reference/architecture/lib/signal-helpers.ts](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/reference/architecture/lib/signal-helpers.ts): 18 TypeScript signal functions
+- [reference/architecture/schemas/ai-story-schema-v4.json](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/reference/architecture/schemas/ai-story-schema-v4.json): AI Story schema
+
+## Operations
+
+- [reference/operations/maf-worktree.sh](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/reference/operations/maf-worktree.sh): Git worktree automation
+- [reference/operations/MAF-INTEGRATION-GUIDE.md](https://raw.githubusercontent.com/Boomerang-Apps/maf-d7x9k2m4p8/main/reference/operations/MAF-INTEGRATION-GUIDE.md): Integration guide
+
+## Key Rules
+
+1. CTO is the ONLY agent who can merge to main
+2. QA agents are independent - devs cannot self-approve
+3. 108 forbidden operations must be enforced
+4. Git worktrees isolate agent work
+5. Database signals coordinate agents
