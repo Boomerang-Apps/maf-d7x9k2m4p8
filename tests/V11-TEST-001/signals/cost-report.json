@@ -1,0 +1,22 @@
+{
+  "event": "cost_report",
+  "timestamp": "2026-01-08T14:09:53+00:00",
+  "test_code": "V11-TEST-001",
+  "agents": {
+    "fe-auth-dev": {
+      "model": "claude-sonnet-4-20250514",
+      "input_tokens": 45000,
+      "output_tokens": 12000,
+      "cost_usd": .3150
+    },
+    "qa-auth": {
+      "model": "claude-haiku-4-5-20251001",
+      "input_tokens": 8000,
+      "output_tokens": 2000,
+      "cost_usd": .0045
+    }
+  },
+  "total_input_tokens": 53000,
+  "total_output_tokens": 14000,
+  "total_cost_usd": .3195
+}

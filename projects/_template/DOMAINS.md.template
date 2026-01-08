@@ -1,0 +1,77 @@
+# [PROJECT_NAME] Domain Definitions
+## MAF V11.0.0 Project-Specific Configuration
+
+<!--
+INSTRUCTIONS:
+1. Define your project's domains
+2. Each domain should have clear file ownership
+3. Map domains to agents
+
+Example domains for different projects:
+- Restaurant: MENU, ORDERS, RESERVATIONS, CUSTOMERS
+- E-commerce: PRODUCTS, CART, CHECKOUT, USERS
+- SaaS: DASHBOARD, SETTINGS, BILLING, TEAMS
+-->
+
+**Version:** 11.0.0  
+**Project:** [PROJECT_NAME]  
+**Total Domains:** [COUNT]
+
+---
+
+## Domain Overview
+
+| Domain | Description | Security Level |
+|--------|-------------|----------------|
+| [DOMAIN1] | [description] | [HIGH/MEDIUM/LOW] |
+| [DOMAIN2] | [description] | [HIGH/MEDIUM/LOW] |
+
+---
+
+## Domain Definition Template
+
+### [DOMAIN1]
+
+**Purpose:** [What this domain handles]
+
+| Property | Value |
+|----------|-------|
+| Domain Code | `[domain1]` |
+| Frontend Agent | fe-[domain1] |
+| Backend Agent | be-[domain1] |
+| QA Agent | qa-[specialty] |
+| Security Level | [HIGH/MEDIUM/LOW] |
+
+**Owned Paths:**
+```
+Frontend:
+  - src/app/[domain1]/**
+  - src/components/[domain1]/**
+
+Backend:
+  - src/app/api/[domain1]/**
+  - src/lib/[domain1]/**
+
+Contracts:
+  - contracts/[domain1].ts
+```
+
+**Forbidden Paths:**
+```
+  - [paths this domain cannot touch]
+```
+
+---
+
+## Security Levels
+
+| Level | Domains | Approval Required |
+|-------|---------|-------------------|
+| CRITICAL | [domains] | L1 (Human) |
+| HIGH | [domains] | L2 (CTO) |
+| MEDIUM | [domains] | L3 (PM) |
+| LOW | [domains] | L5 (Auto) |
+
+---
+
+**Document Status:** PROJECT-SPECIFIC (customize for your project)

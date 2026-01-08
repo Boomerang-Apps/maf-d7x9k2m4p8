@@ -1,0 +1,53 @@
+{
+  "$schema": "https://maf.boomerang.dev/schemas/test-config.v11.json",
+  "_comment": "V11-TEST-001: First MAF V11.0.0 Validation Test",
+  
+  "test": {
+    "name": "V11-TEST-001",
+    "version": "11.0.0",
+    "description": "First validation test of MAF V11.0.0 framework - Single story execution",
+    "created_at": "2026-01-08",
+    "created_by": "eli",
+    "is_validation_test": true
+  },
+  
+  "waves": {
+    "count": 1,
+    "parallel_agents_per_wave": 2
+  },
+  
+  "safety": {
+    "max_iterations_per_story": 25,
+    "token_budget_per_story": 200000,
+    "timeout_minutes_per_story": 120,
+    "stuck_threshold_minutes": 30,
+    "max_qa_rejections": 3
+  },
+  
+  "models": {
+    "dev_agent": "claude-sonnet-4-20250514",
+    "qa_agent": "claude-haiku-4-5-20251001",
+    "cto_agent": "claude-opus-4-5-20251101"
+  },
+
+  "notifications": {
+    "slack_enabled": true,
+    "slack_on_gate_complete": true,
+    "slack_on_error": true,
+    "slack_cost_threshold_usd": 5.00
+  },
+
+  "deployment": {
+    "auto_push_github": false,
+    "auto_deploy_vercel": false,
+    "require_human_approval_for_main": true
+  },
+
+  "validation": {
+    "pm_validator_required": true,
+    "smoke_test_required": true,
+    "min_test_coverage": 80,
+    "zero_typescript_errors": true,
+    "zero_eslint_errors": true
+  }
+}

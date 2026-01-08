@@ -1,0 +1,168 @@
+# MAF V11.0.0 Docker Compose Template
+# Location: templates/test-template/LOCKED/docker-compose.yml
+#
+# SOURCE TRACEABILITY:
+# - /mnt/project/DOCKER-MULTI-AGENT-IMPLEMENTATION-GUIDE.md
+# - /mnt/project/BYPASS-MODE-AUTOMATION-GUIDE.md
+# - Test 10.0.3 (100% success rate)
+
+version: '3.8'
+
+x-agent-common: &agent-common
+  build:
+    context: .
+    dockerfile: Dockerfile.agent
+  environment:
+    - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    - SUPABASE_URL=${SUPABASE_URL}
+    - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+  volumes:
+    - ./signals:/workspace/.claude/signals
+    - ./worktrees/${AGENT_NAME}:/workspace/code
+  networks:
+    - maf-network
+  restart: "no"
+
+services:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # ORCHESTRATION LAYER
+  # ═══════════════════════════════════════════════════════════════════════════
+  
+  merge-watcher:
+    image: alpine:latest
+    container_name: merge-watcher
+    volumes:
+      - ./signals:/signals
+      - ./scripts:/scripts
+      - ./worktrees:/worktrees
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["sh", "/scripts/merge-watcher.sh"]
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - WAVE_COUNT=${WAVE_COUNT:-2}
+    networks:
+      - maf-network
+    depends_on:
+      wave1-complete:
+        condition: service_completed_successfully
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # WAVE 1 AGENTS
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  wave1-fe-dev:
+    <<: *agent-common
+    container_name: wave1-fe-dev
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave1-fe-dev
+      - DOMAIN=frontend
+      - ROLE=dev
+      - STORY_ID=${WAVE1_FE_STORY}
+    command: >
+      bash -c "claude -p '${WAVE1_FE_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave1-be-dev:
+    <<: *agent-common
+    container_name: wave1-be-dev
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave1-be-dev
+      - DOMAIN=backend
+      - ROLE=dev
+      - STORY_ID=${WAVE1_BE_STORY}
+    command: >
+      bash -c "claude -p '${WAVE1_BE_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave1-qa:
+    <<: *agent-common
+    container_name: wave1-qa
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave1-qa
+      - DOMAIN=qa
+      - ROLE=qa
+    depends_on:
+      wave1-fe-dev:
+        condition: service_completed_successfully
+      wave1-be-dev:
+        condition: service_completed_successfully
+    command: >
+      bash -c "claude -p '${WAVE1_QA_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave1-complete:
+    image: alpine:latest
+    container_name: wave1-complete
+    depends_on:
+      wave1-qa:
+        condition: service_completed_successfully
+    command: ["echo", "Wave 1 complete"]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # WAVE 2 AGENTS (Starts after Wave 1)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  wave2-fe-dev:
+    <<: *agent-common
+    container_name: wave2-fe-dev
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave2-fe-dev
+      - DOMAIN=frontend
+      - ROLE=dev
+      - STORY_ID=${WAVE2_FE_STORY}
+    depends_on:
+      wave1-complete:
+        condition: service_completed_successfully
+    command: >
+      bash -c "claude -p '${WAVE2_FE_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave2-be-dev:
+    <<: *agent-common
+    container_name: wave2-be-dev
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave2-be-dev
+      - DOMAIN=backend
+      - ROLE=dev
+      - STORY_ID=${WAVE2_BE_STORY}
+    depends_on:
+      wave1-complete:
+        condition: service_completed_successfully
+    command: >
+      bash -c "claude -p '${WAVE2_BE_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave2-qa:
+    <<: *agent-common
+    container_name: wave2-qa
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AGENT_ID=wave2-qa
+      - DOMAIN=qa
+      - ROLE=qa
+    depends_on:
+      wave2-fe-dev:
+        condition: service_completed_successfully
+      wave2-be-dev:
+        condition: service_completed_successfully
+    command: >
+      bash -c "claude -p '${WAVE2_QA_PROMPT}' --dangerously-skip-permissions --output-format stream-json"
+
+  wave2-complete:
+    image: alpine:latest
+    container_name: wave2-complete
+    depends_on:
+      wave2-qa:
+        condition: service_completed_successfully
+    command: ["echo", "Wave 2 complete"]
+
+networks:
+  maf-network:
+    driver: bridge
+
+# ═══════════════════════════════════════════════════════════════════════════
+# USAGE:
+# 1. Copy CONFIGURABLE/.env.template to .env
+# 2. Fill in your API keys and story prompts
+# 3. Run: docker compose up
+# ═══════════════════════════════════════════════════════════════════════════

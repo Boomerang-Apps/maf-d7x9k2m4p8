@@ -1,0 +1,58 @@
+# MAF V11.0.0 Agent Dockerfile
+# Location: templates/test-template/LOCKED/Dockerfile.agent
+#
+# SOURCE TRACEABILITY:
+# - /mnt/project/BYPASS-MODE-AUTOMATION-GUIDE.md
+# - /mnt/project/AUTONOMOUS-AGENT-SETUP-GUIDE.md
+# - Test 10.0.3 (100% success rate with this pattern)
+#
+# CRITICAL: Must use non-root user for --dangerously-skip-permissions to work
+
+FROM node:20-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Claude Code CLI
+RUN npm install -g @anthropic-ai/claude-code
+
+# Create non-root user (REQUIRED for autonomous execution)
+RUN useradd -m -s /bin/bash claudeuser
+
+# Create workspace directories
+RUN mkdir -p /workspace/.claude/signals \
+    && mkdir -p /workspace/code \
+    && chown -R claudeuser:claudeuser /workspace
+
+# Copy CLAUDE.md for agent instructions
+COPY CLAUDE.md /workspace/.claude/CLAUDE.md
+
+# Set working directory
+WORKDIR /workspace/code
+
+# Switch to non-root user (CRITICAL)
+USER claudeuser
+
+# Set environment
+ENV HOME=/home/claudeuser
+ENV PATH="/home/claudeuser/.npm-global/bin:$PATH"
+
+# Default command (override in docker-compose.yml)
+CMD ["bash"]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# WHY NON-ROOT USER IS REQUIRED:
+#
+# ❌ FAILS: root@container:~# claude --dangerously-skip-permissions
+# Error: Cannot use --dangerously-skip-permissions with root privileges
+#
+# ✅ WORKS: claudeuser@container:~$ claude --dangerously-skip-permissions
+# [Claude starts in bypass mode, no permission prompts]
+#
+# This is a security design decision by Anthropic - AI agents should not
+# have root access to the system they're working on.
+# ═══════════════════════════════════════════════════════════════════════════

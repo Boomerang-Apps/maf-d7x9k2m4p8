@@ -1,70 +1,170 @@
-# Multi-Agent Framework (MAF)
+# MAF V11.0.0 - Multi-Agent Framework
+## Aerospace-Grade Autonomous Development System
 
-> Production-ready framework for autonomous multi-agent software development
+**Version:** 11.0.0  
+**Date:** January 8, 2026  
+**Status:** BUILDING
+
+---
+
+## What is MAF?
+
+MAF (Multi-Agent Framework) is a system for orchestrating autonomous AI agents to develop software with aerospace-grade safety and quality controls.
+
+### Key Features
+
+- **8-Gate Quality Pipeline** - Every change passes through 8 quality gates
+- **108 Forbidden Operations** - Safety protocol prevents destructive actions
+- **Independent QA** - Different agent validates code (no self-approval)
+- **Git Worktree Isolation** - Each agent works in isolated workspace
+- **External Enforcement** - Safety limits enforced externally, not by trust
+
+---
+
+## Directory Structure
+
+```
+maf-v11/
+│
+├── core/                        ← FRAMEWORK (Never changes per project)
+│   ├── SAFETY-PROTOCOL.md         108 forbidden operations
+│   ├── GATE-SYSTEM.md             8-gate definitions
+│   ├── APPROVAL-LEVELS.md         L0-L5 approval matrix
+│   ├── EMERGENCY-LEVELS.md        E1-E5 emergency stops
+│   └── FMEA.md                    17 failure modes analyzed
+│
+├── templates/                   ← REUSABLE TEMPLATES
+│   ├── test-template/
+│   │   ├── LOCKED/                Framework (never modify)
+│   │   │   ├── CLAUDE.md          Agent instructions
+│   │   │   ├── docker-compose.yml Orchestration
+│   │   │   ├── Dockerfile.agent   Agent image
+│   │   │   └── scripts/           Merge watcher, entrypoint
+│   │   └── CONFIGURABLE/          Your test config (edit this)
+│   │       ├── .env.template      Credentials
+│   │       ├── config.json        Test parameters
+│   │       └── stories/           Your stories
+│   └── story.template.json        AI Story schema
+│
+├── validation/                  ← TESTING TOOLS (Day 3)
+├── operations/                  ← HOW TO RUN (Day 2-3)
+├── database/                    ← DATABASE (Day 4-5)
+└── projects/                    ← PROJECT IMPLEMENTATIONS
+    ├── airview/                   AirView marketplace
+    │   ├── AGENTS.md              29 agents defined
+    │   └── DOMAINS.md             11 domains defined
+    └── _template/                 Template for new projects
+```
+
+---
 
 ## Quick Start
+
+### 1. Create a New Test
+
 ```bash
-# 1. Read the safety protocol
-cat core/SAFETY-PROTOCOL.md
+# Copy the template
+cp -r templates/test-template/ my-test/
 
-# 2. Understand domain boundaries
-cat core/DOMAINS.md
+# Edit your credentials
+cp my-test/CONFIGURABLE/.env.template my-test/.env
+vim my-test/.env
 
-# 3. Apply database migration
-psql $DATABASE_URL -f reference/architecture/migrations/maf-complete-migration.sql
+# Add your stories
+vim my-test/CONFIGURABLE/stories/wave1/STORY-001.json
 
-# 4. Setup agent worktrees
-chmod +x reference/operations/maf-worktree.sh
-./reference/operations/maf-worktree.sh setup
+# Run the test
+cd my-test
+docker compose up
 ```
 
-## Structure
-```
-maf/
-├── .claude/                 # Claude-specific context
-│   ├── context.md          # Session context primer
-│   └── memory-anchors.md   # Key facts to remember
-│
-├── core/                    # Current canonical versions
-│   ├── SAFETY-PROTOCOL.md  # 108 forbidden operations
-│   ├── DOMAINS.md          # 12 domain boundaries
-│   ├── AGENTS.md           # 29 agent specifications
-│   └── PM-VALIDATOR-SECTIONS.md
-│
-├── reference/               # Supporting documentation
-│   ├── architecture/       # Database, schemas, TypeScript
-│   ├── operations/         # Templates, scripts, guides
-│   ├── testing/            # Benchmarks and validation
-│   └── research/           # Analysis and gap reports
-│
-├── learnings/               # Captured lessons
-│   ├── PHASE-1-COMPLETION-REPORT.md
-│   └── PHASE-2-COMPLETION-REPORT.md
-│
-└── sessions/                # Session handoffs
-    └── SESSION-HANDOFF-MAF-GAP-EXECUTION.md
+### 2. Create a New Project
+
+```bash
+# Copy the project template
+cp -r projects/_template/ projects/my-project/
+
+# Define your domains
+vim projects/my-project/DOMAINS.md
+
+# Define your agents
+vim projects/my-project/AGENTS.md
 ```
 
-## Key Numbers
+---
 
-| Component | Count |
-|-----------|-------|
-| Agents | 29 (CTO, PM, 10 FE, 10 BE, 5 QA, DevOps, Security) |
-| Domains | 12 (auth, client, pilot, project, proposal, payment, deliverables, messaging, admin, core, layout, notifications) |
-| Gates | 8 (0-7) |
-| Forbidden Operations | 108 |
-| Database Tables | 9 |
-| Signal Types | 21 |
+## Core Principles
 
-## Core Documents
+### The "Change Only Goals" Pattern
 
-| Document | Purpose |
-|----------|---------|
-| [core/SAFETY-PROTOCOL.md](core/SAFETY-PROTOCOL.md) | Agent instructions, 108 forbidden ops, emergency levels |
-| [core/DOMAINS.md](core/DOMAINS.md) | Domain boundaries and file ownership |
-| [core/AGENTS.md](core/AGENTS.md) | 29 agent definitions with roles and models |
-| [.claude/context.md](.claude/context.md) | Quick context primer for new sessions |
+```
+LOCKED = The Airplane (never changes per flight)
+CONFIGURABLE = The Flight Plan (changes every flight)
+```
 
-## License
+You don't modify safety systems for each test - you only change your goals/tasks.
 
-MIT - Built by [Boomerang Apps](https://boomerangapps.com)
+### External Enforcement
+
+```
+❌ WRONG: "Dear agent, please don't exceed budget"
+✅ RIGHT: External kill switch that terminates agent
+```
+
+Safety must be enforced externally, not requested.
+
+### Independent QA
+
+```
+❌ WRONG: Dev agent reviews own code
+✅ RIGHT: Different QA agent validates code
+```
+
+No self-approval allowed.
+
+---
+
+## Building Progress
+
+| Phase | Days | Status |
+|-------|------|--------|
+| Phase 1: Core Framework | 1-3 | 🔄 In Progress |
+| Phase 2: Database | 4-5 | ⬜ Not Started |
+| Phase 3: Validation | 6-7 | ⬜ Not Started |
+| Phase 4: First Test | 8-10 | ⬜ Not Started |
+
+---
+
+## Documentation
+
+### Core Files (LOCKED - Don't Modify)
+- [SAFETY-PROTOCOL.md](core/SAFETY-PROTOCOL.md) - 108 forbidden operations
+- [GATE-SYSTEM.md](core/GATE-SYSTEM.md) - 8-gate definitions
+- [APPROVAL-LEVELS.md](core/APPROVAL-LEVELS.md) - L0-L5 matrix
+- [EMERGENCY-LEVELS.md](core/EMERGENCY-LEVELS.md) - E1-E5 procedures
+- [FMEA.md](core/FMEA.md) - 17 failure modes
+
+### Project-Specific
+- [projects/airview/AGENTS.md](projects/airview/AGENTS.md) - AirView agents
+- [projects/airview/DOMAINS.md](projects/airview/DOMAINS.md) - AirView domains
+
+---
+
+## Source Traceability
+
+Every file includes a header showing exactly where content came from:
+
+```markdown
+<!--
+MAF V11.0.0 SOURCE TRACEABILITY
+Source Files:
+  - /mnt/project/COMPLETE-SAFETY-REFERENCE.md
+-->
+```
+
+This ensures nothing is invented - everything is extracted from validated documentation.
+
+---
+
+**Built by:** Boomerang Apps  
+**Framework:** Based on 14 test iterations (V8 → V10.0.7)

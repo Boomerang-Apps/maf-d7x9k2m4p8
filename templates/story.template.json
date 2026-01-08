@@ -1,0 +1,182 @@
+{
+  "$schema": "https://maf.boomerang.dev/schemas/ai-story.v11.json",
+  "_comment": "MAF V11.0.0 AI Story Template - Copy and customize for each story",
+  "_source": "/mnt/project/ai-story_schema.json (356 lines)",
+  
+  "id": "DOMAIN-TYPE-001",
+  "title": "Create [Component/Feature] with [Key Capability]",
+  "domain": "auth",
+  "agent": "auth-fe-dev",
+  "wave": 1,
+  "priority": "P2-Medium",
+  "complexity": "M",
+  "estimate_hours": 4,
+  
+  "objective": {
+    "as_a": "[user persona]",
+    "i_want": "[desired capability - min 10 chars]",
+    "so_that": "[business benefit - min 10 chars]"
+  },
+  
+  "scope": {
+    "in_scope": [
+      "Item explicitly included",
+      "Another included item"
+    ],
+    "out_of_scope": [
+      "Item explicitly excluded",
+      "Feature for future story"
+    ],
+    "definitions": {
+      "term": "Definition of term for clarity"
+    }
+  },
+  
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "title": "Descriptive title",
+      "ears_pattern": "event-driven",
+      "criterion": "WHEN [trigger] the system SHALL [behavior]",
+      "given": "Precondition/context",
+      "when": "Trigger event",
+      "then": "Expected behavior with SHALL/SHOULD/MAY",
+      "threshold": "Response time < 2000ms"
+    },
+    {
+      "id": "AC-2",
+      "title": "Validation rule",
+      "ears_pattern": "ubiquitous",
+      "criterion": "The system SHALL [always do this behavior]",
+      "threshold": "100% of cases"
+    },
+    {
+      "id": "AC-3",
+      "title": "Error handling",
+      "ears_pattern": "unwanted",
+      "criterion": "IF [error condition] THEN the system SHALL [handling behavior]",
+      "threshold": "Return appropriate HTTP status code"
+    }
+  ],
+  
+  "files": {
+    "create": [
+      "src/components/domain/ComponentName.tsx",
+      "src/components/domain/ComponentName.test.tsx"
+    ],
+    "modify": [
+      "src/components/domain/index.ts (add export)"
+    ],
+    "forbidden": [
+      "src/components/other-domain/*",
+      ".env*",
+      "package.json"
+    ]
+  },
+  
+  "api_contract": {
+    "_comment": "Include for backend stories",
+    "endpoint": "POST /api/v1/resource",
+    "request": {
+      "type_name": "CreateResourceRequest",
+      "fields": {
+        "name": {
+          "type": "string",
+          "required": true,
+          "validation": "minLength: 3, maxLength: 100"
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "validation": "email format"
+        }
+      }
+    },
+    "response": {
+      "success_type": "ResourceResponse",
+      "error_codes": [
+        { "code": "INVALID_INPUT", "status": 400, "message": "Validation failed" },
+        { "code": "UNAUTHORIZED", "status": 401, "message": "Not authenticated" },
+        { "code": "NOT_FOUND", "status": 404, "message": "Resource not found" }
+      ]
+    }
+  },
+  
+  "tests": {
+    "commands": [
+      "pnpm test src/components/domain/ComponentName.test.tsx",
+      "pnpm test:coverage"
+    ],
+    "coverage_threshold": 80,
+    "unit_tests": [
+      "renders without crashing",
+      "validates input correctly",
+      "handles error states",
+      "calls API with correct parameters"
+    ],
+    "integration_tests": [
+      "complete user flow works end-to-end"
+    ]
+  },
+  
+  "dependencies": {
+    "stories": [],
+    "contracts": [
+      "contracts/resource.contract.ts"
+    ],
+    "infrastructure": [
+      "Supabase table: resources"
+    ]
+  },
+  
+  "safety": {
+    "max_iterations": 25,
+    "token_budget": 200000,
+    "timeout_minutes": 120,
+    "stop_conditions": [
+      "Same error 3 times in a row",
+      "Token budget exceeded",
+      "Timeout reached",
+      "Build fails after 3 fix attempts"
+    ],
+    "escalation_triggers": [
+      "Need to modify files outside domain",
+      "Database schema change required",
+      "Security-related decision needed"
+    ],
+    "forbidden_operations": [
+      "Modify other domain files",
+      "Push to main branch",
+      "Deploy to production",
+      "Install new dependencies without approval"
+    ]
+  },
+  
+  "implementation_hints": [
+    "Use existing AuthContext for user state",
+    "Follow existing component patterns in src/components/auth/",
+    "Check contracts/ for type definitions"
+  ],
+  
+  "rollback_plan": {
+    "git_strategy": "git revert [commit-sha]",
+    "database_rollback": "No database changes",
+    "recovery_steps": [
+      "Identify failing commit",
+      "Create revert commit",
+      "Verify tests pass",
+      "Push revert to feature branch"
+    ]
+  },
+  
+  "definition_of_done": [
+    "All acceptance criteria verified",
+    "Unit tests written and passing",
+    "Coverage >= 80%",
+    "TypeScript: 0 errors",
+    "ESLint: 0 errors",
+    "Build succeeds",
+    "QA review approved",
+    "PM review approved"
+  ]
+}

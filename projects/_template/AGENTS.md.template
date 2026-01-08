@@ -1,0 +1,98 @@
+# [PROJECT_NAME] Agent Definitions
+## MAF V11.0.0 Project-Specific Configuration
+
+<!--
+INSTRUCTIONS:
+1. Copy this file and DOMAINS.md.template to a new project folder
+2. Rename to AGENTS.md and DOMAINS.md
+3. Customize the agents for your project's domains
+
+Example:
+  cp -r projects/_template/ projects/restaurant/
+  cd projects/restaurant/
+  # Edit AGENTS.md and DOMAINS.md for restaurant app
+-->
+
+**Version:** 11.0.0  
+**Project:** [PROJECT_NAME]  
+**Total Agents:** [COUNT]
+
+---
+
+## Agent Summary
+
+| Category | Count | Agents |
+|----------|-------|--------|
+| Management | 2 | CTO, PM |
+| Frontend Dev | [N] | [list] |
+| Backend Dev | [N] | [list] |
+| Quality Assurance | [N] | [list] |
+| **TOTAL** | **[TOTAL]** | |
+
+---
+
+## Management Agents
+
+### CTO Agent (Same for all projects)
+
+| Field | Value |
+|-------|-------|
+| Agent Code | `cto` |
+| Agent Type | Management |
+| Model | claude-opus-4-5-20251101 |
+| Gates Owned | Gate 0 (Research), Gate 7 (Merge) |
+
+### PM Agent (Same for all projects)
+
+| Field | Value |
+|-------|-------|
+| Agent Code | `pm` |
+| Agent Type | Management |
+| Model | claude-opus-4-5-20251101 |
+| Gates Owned | Gate 5 (PM Review) |
+
+---
+
+## Frontend Dev Agents
+
+| Agent Code | Domain | QA Partner | Owned Paths |
+|------------|--------|------------|-------------|
+| `fe-[domain1]` | [DOMAIN1] | qa-[specialty] | src/app/[domain1]/**, src/components/[domain1]/** |
+| `fe-[domain2]` | [DOMAIN2] | qa-[specialty] | src/app/[domain2]/**, src/components/[domain2]/** |
+
+**Model:** claude-sonnet-4-20250514
+
+---
+
+## Backend Dev Agents
+
+| Agent Code | Domain | QA Partner | Owned Paths |
+|------------|--------|------------|-------------|
+| `be-[domain1]` | [DOMAIN1] | qa-[specialty] | src/app/api/[domain1]/**, src/lib/[domain1]/** |
+| `be-[domain2]` | [DOMAIN2] | qa-[specialty] | src/app/api/[domain2]/**, src/lib/[domain2]/** |
+
+**Model:** claude-sonnet-4-20250514
+
+---
+
+## QA Agents
+
+| Agent Code | Specialty | Covers Domains |
+|------------|-----------|----------------|
+| `qa-core` | Core validation | [domains] |
+| `qa-[specialty]` | [description] | [domains] |
+
+**Model:** claude-haiku-4-5-20251001
+
+---
+
+## Quick Reference by Domain
+
+| Domain | Frontend | Backend | QA |
+|--------|----------|---------|-----|
+| [DOMAIN1] | fe-[domain1] | be-[domain1] | qa-[specialty] |
+| [DOMAIN2] | fe-[domain2] | be-[domain2] | qa-[specialty] |
+
+---
+
+**Document Status:** PROJECT-SPECIFIC (customize for your project)

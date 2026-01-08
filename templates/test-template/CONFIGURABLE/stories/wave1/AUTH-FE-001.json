@@ -1,0 +1,131 @@
+{
+  "$schema": "https://maf.boomerang.dev/schemas/ai-story.v11.json",
+  "_comment": "Example story for Wave 1 - Copy and customize",
+  
+  "id": "AUTH-FE-001",
+  "title": "Create LoginForm component with email validation",
+  "domain": "auth",
+  "agent": "auth-fe-dev",
+  "wave": 1,
+  "priority": "P1-High",
+  "complexity": "M",
+  "estimate_hours": 4,
+  
+  "objective": {
+    "as_a": "registered user",
+    "i_want": "to log in with my email and password",
+    "so_that": "I can access my personalized dashboard"
+  },
+  
+  "scope": {
+    "in_scope": [
+      "Login form UI component",
+      "Email validation",
+      "Password visibility toggle",
+      "Error message display",
+      "Loading state"
+    ],
+    "out_of_scope": [
+      "Password reset flow",
+      "Social login",
+      "Remember me functionality"
+    ]
+  },
+  
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "title": "Email validation",
+      "ears_pattern": "event-driven",
+      "criterion": "WHEN user enters email THEN the system SHALL validate format",
+      "given": "Login form is displayed",
+      "when": "User enters email",
+      "then": "System SHALL show error if invalid format",
+      "threshold": "Validation response < 100ms"
+    },
+    {
+      "id": "AC-2",
+      "title": "Submit button state",
+      "ears_pattern": "state-driven",
+      "criterion": "WHILE form is invalid the submit button SHALL be disabled",
+      "threshold": "Button disabled when email or password empty"
+    },
+    {
+      "id": "AC-3",
+      "title": "Loading state",
+      "ears_pattern": "event-driven",
+      "criterion": "WHEN form is submitted THEN loading indicator SHALL display",
+      "threshold": "Loading shows within 50ms of submit"
+    },
+    {
+      "id": "AC-4",
+      "title": "Error handling",
+      "ears_pattern": "unwanted",
+      "criterion": "IF login fails THEN error message SHALL display",
+      "threshold": "Error message visible and descriptive"
+    }
+  ],
+  
+  "files": {
+    "create": [
+      "src/components/auth/LoginForm.tsx",
+      "src/components/auth/LoginForm.test.tsx"
+    ],
+    "modify": [
+      "src/components/auth/index.ts"
+    ],
+    "forbidden": [
+      "src/components/client/*",
+      "src/components/pilot/*",
+      ".env*",
+      "package.json"
+    ]
+  },
+  
+  "tests": {
+    "commands": [
+      "pnpm test src/components/auth/LoginForm.test.tsx",
+      "pnpm test:coverage"
+    ],
+    "coverage_threshold": 80,
+    "unit_tests": [
+      "renders without crashing",
+      "validates email format correctly",
+      "disables submit when form invalid",
+      "shows loading state on submit",
+      "displays error message on failure"
+    ]
+  },
+  
+  "safety": {
+    "max_iterations": 25,
+    "token_budget": 200000,
+    "timeout_minutes": 120,
+    "stop_conditions": [
+      "Same error 3 times in a row",
+      "Token budget exceeded",
+      "Timeout reached",
+      "Build fails after 3 fix attempts"
+    ],
+    "forbidden_operations": [
+      "Modify files outside auth domain",
+      "Push to main branch",
+      "Install new dependencies"
+    ]
+  },
+  
+  "implementation_hints": [
+    "Use zod for validation schema",
+    "Use react-hook-form for form state",
+    "Follow existing component patterns in src/components/auth/"
+  ],
+  
+  "definition_of_done": [
+    "All acceptance criteria verified",
+    "Unit tests written and passing",
+    "Coverage >= 80%",
+    "TypeScript: 0 errors",
+    "ESLint: 0 errors",
+    "Build succeeds"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://maf.boomerang.dev/schemas/test-config.v11.json",
+  "_comment": "MAF V11.0.0 Test Configuration - Customize for each test",
+  
+  "test": {
+    "name": "V11-Test-001",
+    "version": "11.0.0",
+    "description": "First test of MAF V11.0.0 framework",
+    "created_at": "2026-01-08",
+    "created_by": "eli"
+  },
+  
+  "waves": {
+    "count": 2,
+    "parallel_agents_per_wave": 2
+  },
+  
+  "safety": {
+    "max_iterations_per_story": 25,
+    "token_budget_per_story": 200000,
+    "timeout_minutes_per_story": 120,
+    "stuck_threshold_minutes": 30,
+    "max_qa_rejections": 3
+  },
+  
+  "models": {
+    "dev_agent": "claude-sonnet-4-20250514",
+    "qa_agent": "claude-haiku-4-20250514",
+    "cto_agent": "claude-opus-4-20250514"
+  },
+  
+  "notifications": {
+    "slack_enabled": true,
+    "notify_on_gate_complete": true,
+    "notify_on_error": true,
+    "notify_on_stuck": true,
+    "notify_on_cost_threshold": 10.00
+  },
+  
+  "deployment": {
+    "auto_push_github": false,
+    "auto_deploy_vercel": false,
+    "require_human_approval_for_main": true
+  },
+  
+  "validation": {
+    "run_pm_validator_before_start": true,
+    "run_smoke_test_before_start": true,
+    "require_80_percent_coverage": true,
+    "require_zero_typescript_errors": true,
+    "require_zero_eslint_errors": true
+  }
+}
